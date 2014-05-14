@@ -1,0 +1,138 @@
+#!/usr/bin/ruby
+
+require 'net/http'
+require 'thread'
+require 'json'
+require 'Qt'
+require 'qtwebkit'
+require 'terminal'
+
+FONT = Qt::Font.new()
+FONT.setFamily(FONT.defaultFamily)
+
+CSS = "<style>
+div.gold {
+width:230px;
+height:25px;
+padding:5px;
+border:2px solid gold;
+margin:2px;
+background-color:#D5D1CF;
+border-radius:10px;
+font-family:'Oxygen-Sans';
+}
+div.red {
+width:230px;
+height:25px;
+padding:5px;
+border:2px solid red;
+margin:2px;
+background-color:#D5D1CF;
+border-radius:10px;
+font-family:'Oxygen-Sans';
+}
+div.green {
+width:230px;
+height:25px;
+padding:5px;
+border:2px solid green;
+margin:2px;
+background-color:#D5D1CF;
+border-radius:10px;
+font-family:'Oxygen-Sans';
+}
+div.blue {
+width:230px;
+height:25px;
+padding:5px;
+border:2px solid blue;
+margin:2px;
+background-color:#D5D1CF;
+border-radius:10px;
+font-family:'Oxygen-Sans';
+}
+div.waiting {
+  float:right;
+  align:top;
+}
+div.station {
+  float:left;
+}
+</style>
+"
+
+class QtApp < Qt::Widget
+  include Marta
+
+  slots 'on_activated(QString)'
+
+  def initialize
+    super
+
+    @trains = []
+    @stations = []
+    init_data = Thread.new {
+      update
+    }
+
+    init_ui
+    show
+    
+    init_data.join()
+
+    for box in @stations.uniq
+      @combo.addItem(box)
+    end
+
+    @combo.setCurrentIndex(16)
+    on_activated(@combo.currentText)
+    
+    Thread.new() {
+      while true
+        sleep(5)
+        update
+        puts("heartbeat!")
+      end
+    }
+  end
+
+  def init_ui
+    setWindowTitle "Terminal"
+    resize(275, 400)
+    setWindowIcon(get_icon())
+
+    @layout = Qt::VBoxLayout.new(self)
+    @combo = MARTAComboBox.new(self)
+    @webkit = Qt::WebView.new(self)
+
+    @layout.setMargin(2)
+    connect(@combo, SIGNAL("activated(QString)"), self, SLOT("on_activated(QString)"))
+    
+    @layout.addWidget(@combo)
+    @layout.addWidget(@webkit)
+  end
+
+  def update
+    puts "up"
+    @trains = get_data
+    @stations = get_trains
+  end
+
+  def on_activated(station)
+    @text = ["<body bgcolor='#D5D1CF'>", CSS]
+    for train in @trains
+      if train['STATION'].split.map(&:capitalize).join(' ') == station
+        @text.push("<div class='#{train['LINE']}'>
+          <div class='waiting'>#{train['WAITING_TIME']}</div>
+          <div class='station'>#{train['DESTINATION']}</div>
+          </div>")
+      end
+    end
+    @text.push("</body>")
+    @webkit.setHtml(@text.join(""))
+    end
+end
+
+app = Qt::Application.new(ARGV)
+qtapp = QtApp.new
+app.exec
