@@ -23,5 +23,5 @@ Gem::Specification.new do |s|
     s.email       = 'tchacex@gmail.com'
     s.homepage    = 'http://tchace.info'
     s.files       = ["lib/terminal.rb", "lib/marta.rb", "lib/marta_combobox.rb", "lib/icon.png"]
-    s.add_development_dependency 'qtbindings'
+    s.add_runtime_dependency 'qtbindings'
 end
