@@ -119,7 +119,7 @@ class QtApp < Qt::Widget
   end
 
   def on_activated(station)
-    @text = ["<body bgcolor='#D5D1CF'>", CSS]
+    @text = ["<body bgcolor='#ebebeb'>", CSS]
     for train in @trains
       if train['STATION'].split.map(&:capitalize).join(' ') == station
         @text.push("<div class='#{train['LINE']}'>
