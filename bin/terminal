@@ -91,7 +91,6 @@ class QtApp < Qt::Widget
       while true
         sleep(5)
         update
-        puts("heartbeat!")
       end
     }
   end
@@ -113,7 +112,6 @@ class QtApp < Qt::Widget
   end
 
   def update
-    puts "up"
     @trains = get_data
     @stations = get_trains
   end
