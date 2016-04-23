@@ -15,13 +15,13 @@ Gem::Specification.new do |s|
     s.name        = 'terminal'
     s.license     = 'GPL'
     s.executables << 'terminal'
-    s.version     = '0.4.0'
+    s.version     = '0.4.1'
     s.date        = date
     s.summary     = 'Shows arrival times for MARTA trains in the Atlanta area.'
     s.description = "Uses MARTA's REST API to get train information and shows them in a clean Qt and HTML based interface."
-    s.authors     = ['Thomas Chace']
-    s.email       = 'tchacex@gmail.com'
-    s.homepage    = 'http://tchace.info'
+    s.authors     = ['Alexandra Chace']
+    s.email       = 'achace@student.gsu.edu'
+    s.homepage    = 'http://leximch.wordpress.com'
     s.files       = ["lib/terminal.rb", "lib/marta.rb", "lib/marta_combobox.rb", "lib/icon.png"]
     s.add_runtime_dependency 'qtbindings'
 end
